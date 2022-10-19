@@ -1,4 +1,7 @@
 # Definition for singly-linked list.
+from typing import List
+
+
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
@@ -6,33 +9,41 @@ class ListNode:
 
 def addTwoNumbers(l1, l2):
         
-    dec_pos = 0
-    l1_sum = 0
-    l2_sum = 0
-    tot_sum = 0
-    tot_list = ListNode()
-    cur_node = tot_list
-    
-    while l1 != None:
-        l1_sum += l1.val * pow(10,dec_pos)
-        dec_pos += 1
-        l1 = l1.next
-    dec_pos = 0
-    while l2 != None:
-        l2_sum += l2.val * pow(10,dec_pos)
-        dec_pos += 1
-        l2 = l2.next    
-    tot_sum = l1_sum + l2_sum
-    
-    if tot_sum == 0:
-        return tot_list
-    while tot_sum != 0:
-        new_node = ListNode(tot_sum % 10)
+    head = ListNode(0)
+    cur_node = head
+
+    carry = 0
+
+    while l1 != None or l2 != None or carry != 0:
+        
+        if l1 != None:
+            l1_cur_val = l1.val
+        else: 
+            l1_cur_val = 0
+
+        if l2 != None:
+            l2_cur_val = l2.val
+        else:
+            l2_cur_val = 0
+
+        column_sum = l1_cur_val + l2_cur_val + carry
+
+        carry = column_sum // 10
+
+        new_node = ListNode(column_sum % 10)
         cur_node.next = new_node
-        cur_node = cur_node.next
-        tot_sum = tot_sum // 10
-    
-    return tot_list.next
+        cur_node = new_node
+
+        if l1 != None:
+            l1 = l1.next
+        else:
+            l1 = None
+        
+        if l2 != None:
+            l2 = l2.next
+        else:
+            l2 = None
+    return head.next
 
 l1 = ListNode(2)
 l1.next = ListNode(4)
@@ -47,4 +58,3 @@ node = addTwoNumbers(l1, l2)
 while node != None:
     print(node.val)
     node = node.next
-
